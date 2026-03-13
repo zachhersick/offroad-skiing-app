@@ -10,7 +10,7 @@ from app.db.base import Base
 
 
 config = context.config
-config.set_main_option("sqlalchemy.url", get_settings().database_url.replace("+asyncpg", ""))
+config.set_main_option("sqlalchemy.url", get_settings().sqlalchemy_database_url.replace("+asyncpg", ""))
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
@@ -36,4 +36,3 @@ if context.is_offline_mode():
     run_migrations_offline()
 else:
     run_migrations_online()
-
