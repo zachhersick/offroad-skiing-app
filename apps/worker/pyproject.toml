@@ -1,0 +1,18 @@
+[project]
+name = "terrainpilot-worker"
+version = "0.1.0"
+description = "Worker service for TerrainPilot"
+requires-python = ">=3.12"
+dependencies = [
+  "redis>=5.2.1",
+  "sqlalchemy>=2.0.39"
+]
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["app*"]
+

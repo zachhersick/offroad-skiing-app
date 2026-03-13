@@ -1,0 +1,182 @@
+CREATE TABLE IF NOT EXISTS users (
+  id VARCHAR(36) PRIMARY KEY,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  is_active BOOLEAN NOT NULL DEFAULT TRUE,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS profiles (
+  id VARCHAR(36) PRIMARY KEY,
+  user_id VARCHAR(36) UNIQUE NOT NULL REFERENCES users(id),
+  display_name VARCHAR(120) NOT NULL,
+  mode VARCHAR(20) NOT NULL,
+  home_region VARCHAR(120) NOT NULL,
+  comfort_rating INTEGER NOT NULL DEFAULT 3,
+  max_drive_time_hours INTEGER NOT NULL DEFAULT 4,
+  preferred_terrain JSON NOT NULL DEFAULT '[]',
+  snow_preference VARCHAR(50),
+  park_powder_bias VARCHAR(50),
+  details JSON NOT NULL DEFAULT '{}',
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS vehicles (
+  id VARCHAR(36) PRIMARY KEY,
+  user_id VARCHAR(36) NOT NULL REFERENCES users(id),
+  name VARCHAR(120) NOT NULL,
+  drivetrain VARCHAR(20) NOT NULL,
+  lift_inches DOUBLE PRECISION NOT NULL DEFAULT 0,
+  tire_size_inches INTEGER NOT NULL DEFAULT 30,
+  armor_notes TEXT,
+  recovery_gear JSON NOT NULL DEFAULT '{}',
+  notes TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS ski_quivers (
+  id VARCHAR(36) PRIMARY KEY,
+  user_id VARCHAR(36) NOT NULL REFERENCES users(id),
+  name VARCHAR(120) NOT NULL,
+  skis JSON NOT NULL DEFAULT '[]',
+  notes TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS gear_items (
+  id VARCHAR(36) PRIMARY KEY,
+  user_id VARCHAR(36) NOT NULL REFERENCES users(id),
+  mode VARCHAR(20) NOT NULL,
+  category VARCHAR(40) NOT NULL,
+  name VARCHAR(120) NOT NULL,
+  notes TEXT,
+  metadata JSON NOT NULL DEFAULT '{}',
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS trips (
+  id VARCHAR(36) PRIMARY KEY,
+  user_id VARCHAR(36) NOT NULL REFERENCES users(id),
+  mode VARCHAR(20) NOT NULL,
+  title VARCHAR(160) NOT NULL,
+  region VARCHAR(120) NOT NULL,
+  objective TEXT NOT NULL,
+  status VARCHAR(20) NOT NULL,
+  planner_input JSON NOT NULL DEFAULT '{}',
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS routes (
+  id VARCHAR(36) PRIMARY KEY,
+  trip_id VARCHAR(36) NOT NULL REFERENCES trips(id),
+  name VARCHAR(160) NOT NULL,
+  waypoints JSON NOT NULL DEFAULT '[]',
+  notes TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS trail_entries (
+  id VARCHAR(36) PRIMARY KEY,
+  name VARCHAR(160) UNIQUE NOT NULL,
+  region VARCHAR(120) NOT NULL,
+  terrain VARCHAR(80) NOT NULL,
+  difficulty_score INTEGER NOT NULL,
+  drive_time_hours INTEGER NOT NULL,
+  summary TEXT NOT NULL,
+  risks JSON NOT NULL DEFAULT '[]',
+  metadata JSON NOT NULL DEFAULT '{}',
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS resort_entries (
+  id VARCHAR(36) PRIMARY KEY,
+  name VARCHAR(160) UNIQUE NOT NULL,
+  region VARCHAR(120) NOT NULL,
+  terrain_mix VARCHAR(80) NOT NULL,
+  snow_bias VARCHAR(80) NOT NULL,
+  summary TEXT NOT NULL,
+  metadata JSON NOT NULL DEFAULT '{}',
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS conditions (
+  id VARCHAR(36) PRIMARY KEY,
+  mode VARCHAR(20) NOT NULL,
+  source_type VARCHAR(40) NOT NULL,
+  source_id VARCHAR(36) NOT NULL,
+  details JSON NOT NULL DEFAULT '{}',
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS packing_lists (
+  id VARCHAR(36) PRIMARY KEY,
+  trip_id VARCHAR(36) NOT NULL REFERENCES trips(id),
+  title VARCHAR(160) NOT NULL,
+  items JSON NOT NULL DEFAULT '[]',
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS recommendations (
+  id VARCHAR(36) PRIMARY KEY,
+  trip_id VARCHAR(36) NOT NULL REFERENCES trips(id),
+  mode VARCHAR(20) NOT NULL,
+  payload JSON NOT NULL DEFAULT '{}',
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS agent_runs (
+  id VARCHAR(36) PRIMARY KEY,
+  user_id VARCHAR(36) NOT NULL REFERENCES users(id),
+  trip_id VARCHAR(36) NOT NULL REFERENCES trips(id),
+  mode VARCHAR(20) NOT NULL,
+  title VARCHAR(160) NOT NULL,
+  status VARCHAR(40) NOT NULL,
+  retry_count INTEGER NOT NULL DEFAULT 0,
+  request_payload JSON NOT NULL DEFAULT '{}',
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS step_logs (
+  id VARCHAR(36) PRIMARY KEY,
+  agent_run_id VARCHAR(36) NOT NULL REFERENCES agent_runs(id),
+  step_order INTEGER NOT NULL,
+  step_type VARCHAR(40) NOT NULL,
+  status VARCHAR(40) NOT NULL,
+  message TEXT NOT NULL,
+  payload JSON NOT NULL DEFAULT '{}',
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS artifacts (
+  id VARCHAR(36) PRIMARY KEY,
+  agent_run_id VARCHAR(36) NOT NULL REFERENCES agent_runs(id),
+  artifact_type VARCHAR(40) NOT NULL,
+  payload JSON NOT NULL DEFAULT '{}',
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS approvals (
+  id VARCHAR(36) PRIMARY KEY,
+  agent_run_id VARCHAR(36) NOT NULL REFERENCES agent_runs(id),
+  action VARCHAR(120) NOT NULL,
+  reason TEXT NOT NULL,
+  status VARCHAR(40) NOT NULL,
+  context JSON NOT NULL DEFAULT '{}',
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);

@@ -1,0 +1,12 @@
+{
+  "name": "terrainpilot",
+  "private": true,
+  "packageManager": "pnpm@10.6.2",
+  "scripts": {
+    "dev": "docker compose up --build",
+    "lint": "pnpm --filter web lint",
+    "test:web": "pnpm --filter web test",
+    "test:e2e": "pnpm --filter web test:e2e"
+  }
+}
+

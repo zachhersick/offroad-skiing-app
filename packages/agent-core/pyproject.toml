@@ -1,0 +1,18 @@
+[project]
+name = "terrainpilot-agent-core"
+version = "0.1.0"
+description = "Bounded agent runtime for TerrainPilot"
+requires-python = ">=3.12"
+dependencies = [
+  "httpx>=0.28.1",
+  "pydantic>=2.11.0"
+]
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["agent_core*"]
+

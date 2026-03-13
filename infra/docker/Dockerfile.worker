@@ -1,0 +1,16 @@
+FROM python:3.12-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+WORKDIR /workspace
+
+RUN pip install --no-cache-dir uv
+
+COPY . .
+
+RUN uv pip install --system -e packages/agent-core -e apps/api -e apps/worker
+
+WORKDIR /workspace/apps/worker
+
+CMD ["python", "worker_main.py"]

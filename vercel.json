@@ -1,0 +1,7 @@
+{
+  "framework": "nextjs",
+  "installCommand": "corepack enable && pnpm install --filter web... --filter @terrainpilot/shared...",
+  "buildCommand": "pnpm --filter web build",
+  "outputDirectory": "apps/web/.next"
+}
+
