@@ -5,11 +5,10 @@ services:
       dockerfile: infra/docker/Dockerfile.web
     ports:
       - "3000:3000"
-    env_file:
-      - .env
     environment:
-      NEXT_PUBLIC_API_BASE_URL: http://localhost:8000
-      INTERNAL_API_BASE_URL: http://api:8000
+      NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-http://localhost:8000}
+      INTERNAL_API_BASE_URL: ${INTERNAL_API_BASE_URL:-http://api:8000}
+      NEXT_PUBLIC_APP_NAME: ${NEXT_PUBLIC_APP_NAME:-TerrainPilot}
     depends_on:
       - api
     volumes:
@@ -23,11 +22,20 @@ services:
       dockerfile: infra/docker/Dockerfile.api
     ports:
       - "8000:8000"
-    env_file:
-      - .env
     depends_on:
       - postgres
       - redis
+    environment:
+      APP_ENV: ${APP_ENV:-development}
+      DATABASE_URL: ${DATABASE_URL:-postgresql+asyncpg://terrainpilot:terrainpilot@postgres:5432/terrainpilot}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+      JWT_SECRET: ${JWT_SECRET:-change-me}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-change-me-too}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_BASE_URL: ${OPENAI_BASE_URL:-https://api.openai.com/v1}
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-5-mini}
+      ENABLE_LIVE_HTTP: ${ENABLE_LIVE_HTTP:-true}
+      APPROVED_HTTP_HOSTS: ${APPROVED_HTTP_HOSTS:-api.open-meteo.com}
     volumes:
       - .:/workspace
 
@@ -35,12 +43,21 @@ services:
     build:
       context: .
       dockerfile: infra/docker/Dockerfile.worker
-    env_file:
-      - .env
     depends_on:
       - api
       - postgres
       - redis
+    environment:
+      APP_ENV: ${APP_ENV:-development}
+      DATABASE_URL: ${DATABASE_URL:-postgresql+asyncpg://terrainpilot:terrainpilot@postgres:5432/terrainpilot}
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379/0}
+      JWT_SECRET: ${JWT_SECRET:-change-me}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-change-me-too}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_BASE_URL: ${OPENAI_BASE_URL:-https://api.openai.com/v1}
+      OPENAI_MODEL: ${OPENAI_MODEL:-gpt-5-mini}
+      ENABLE_LIVE_HTTP: ${ENABLE_LIVE_HTTP:-true}
+      APPROVED_HTTP_HOSTS: ${APPROVED_HTTP_HOSTS:-api.open-meteo.com}
     volumes:
       - .:/workspace
 
@@ -50,15 +67,11 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-terrainpilot}
       POSTGRES_USER: ${POSTGRES_USER:-terrainpilot}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-terrainpilot}
-    ports:
-      - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
 
   redis:
     image: redis:7-alpine
-    ports:
-      - "6379:6379"
     volumes:
       - redis-data:/data
 
@@ -67,4 +80,3 @@ volumes:
   redis-data:
   web-node-modules:
   root-node-modules:
-

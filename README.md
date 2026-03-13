@@ -16,6 +16,7 @@ TerrainPilot is a workspace-first trip planning and recommendation app for off-r
    docker compose up --build
    ```
 3. Open `http://localhost:3000` for the web app and `http://localhost:8000/docs` for the API.
+4. Postgres and Redis are network-internal by default to avoid host port conflicts; access them from containers unless you intentionally add host bindings.
 
 ## Services
 - `apps/web`: Next.js frontend
@@ -53,5 +54,5 @@ See [`docs/production.md`](/Users/zachhersick/Desktop/DevPersonal/offroad-skiing
 
 ## Safety
 - No repo code triggers paid API calls by default.
-- Live HTTP tools are disabled unless explicitly enabled through environment variables.
+- Live HTTP requests in the planner are approval-gated and only progress when the feature flag is enabled.
 - Approval is required before any external network action or shell command execution.

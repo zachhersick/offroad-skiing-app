@@ -94,10 +94,9 @@ async def create_gear_item(payload: GearItemCreate, user: User = Depends(get_cur
         category=GearCategory(payload.category),
         name=payload.name,
         notes=payload.notes,
-        metadata=payload.metadata,
+        details=payload.details,
     )
     db.add(item)
     await db.commit()
     await db.refresh(item)
     return {"id": item.id, "name": item.name}
-

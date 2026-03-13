@@ -74,12 +74,12 @@ async def process_run(session: AsyncSession, run_id: str) -> AgentRun:
     trail_catalog = [
         _model_to_dict(
             row,
-            ["id", "name", "region", "terrain", "difficulty_score", "drive_time_hours", "summary", "risks", "metadata"],
+            ["id", "name", "region", "terrain", "difficulty_score", "drive_time_hours", "summary", "risks", "details"],
         )
         for row in (await session.execute(select(TrailEntry))).scalars().all()
     ]
     resort_catalog = [
-        _model_to_dict(row, ["id", "name", "region", "terrain_mix", "snow_bias", "summary", "metadata"])
+        _model_to_dict(row, ["id", "name", "region", "terrain_mix", "snow_bias", "summary", "details"])
         for row in (await session.execute(select(ResortEntry))).scalars().all()
     ]
     profile = (

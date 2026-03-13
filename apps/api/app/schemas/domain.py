@@ -41,5 +41,4 @@ class GearItemCreate(BaseModel):
     category: str
     name: str
     notes: str | None = None
-    metadata: dict[str, Any] = Field(default_factory=dict)
-
+    details: dict[str, Any] = Field(default_factory=dict)

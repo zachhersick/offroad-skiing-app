@@ -6,9 +6,11 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.routes_auth import router as auth_router
+from app.api.routes_approvals import router as approvals_router
 from app.api.routes_catalog import router as catalog_router
 from app.api.routes_planner import router as planner_router
 from app.api.routes_profile import router as profile_router
+from app.api.routes_trips import router as trips_router
 from app.core.config import get_settings
 from app.db.base import Base
 from app.db.seed import seed_catalog
@@ -34,12 +36,13 @@ app.add_middleware(
 )
 
 app.include_router(auth_router)
+app.include_router(approvals_router)
 app.include_router(profile_router)
 app.include_router(catalog_router)
 app.include_router(planner_router)
+app.include_router(trips_router)
 
 
 @app.get("/health")
 async def health() -> dict[str, str]:
     return {"status": "ok"}
-

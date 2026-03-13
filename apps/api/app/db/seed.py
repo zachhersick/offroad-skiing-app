@@ -15,7 +15,7 @@ TRAIL_SEED = [
         "drive_time_hours": 2,
         "summary": "Rocky half-day route with good views and a moderate technical section.",
         "risks": ["Loose rock", "Narrow shelf section"],
-        "metadata": {"best_for": ["stock-plus trucks", "half-day trips"]},
+        "details": {"best_for": ["stock-plus trucks", "half-day trips"]},
     },
     {
         "name": "Anza Wash Loop",
@@ -25,7 +25,7 @@ TRAIL_SEED = [
         "drive_time_hours": 3,
         "summary": "Scenic wash route suited for mostly stock midsize vehicles.",
         "risks": ["Sand pockets"],
-        "metadata": {"best_for": ["day trips", "scenic driving"]},
+        "details": {"best_for": ["day trips", "scenic driving"]},
     },
     {
         "name": "Big Bear Ridge Connector",
@@ -35,7 +35,7 @@ TRAIL_SEED = [
         "drive_time_hours": 3,
         "summary": "Longer route with rocks, ruts, and weather sensitivity.",
         "risks": ["Snow closures", "Deep ruts"],
-        "metadata": {"best_for": ["built rigs", "full-day trips"]},
+        "details": {"best_for": ["built rigs", "full-day trips"]},
     },
 ]
 
@@ -46,7 +46,7 @@ RESORT_SEED = [
         "terrain_mix": "all_mountain",
         "snow_bias": "storm",
         "summary": "Large alpine resort with strong storm and chalk performance.",
-        "metadata": {"best_for": ["powder", "advanced all-mountain"]},
+        "details": {"best_for": ["powder", "advanced all-mountain"]},
     },
     {
         "name": "Mt. Bachelor",
@@ -54,7 +54,7 @@ RESORT_SEED = [
         "terrain_mix": "mixed",
         "snow_bias": "wind_buff",
         "summary": "Volcanic terrain with strong visibility and mixed condition coverage.",
-        "metadata": {"best_for": ["all-mountain", "spring laps"]},
+        "details": {"best_for": ["all-mountain", "spring laps"]},
     },
 ]
 
@@ -67,4 +67,3 @@ async def seed_catalog(session: AsyncSession) -> None:
     if resort_count == 0:
         session.add_all(ResortEntry(**item) for item in RESORT_SEED)
     await session.commit()
-

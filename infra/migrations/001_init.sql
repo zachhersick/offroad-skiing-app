@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS gear_items (
   category VARCHAR(40) NOT NULL,
   name VARCHAR(120) NOT NULL,
   notes TEXT,
-  metadata JSON NOT NULL DEFAULT '{}',
+  details JSON NOT NULL DEFAULT '{}',
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -91,7 +91,7 @@ CREATE TABLE IF NOT EXISTS trail_entries (
   drive_time_hours INTEGER NOT NULL,
   summary TEXT NOT NULL,
   risks JSON NOT NULL DEFAULT '[]',
-  metadata JSON NOT NULL DEFAULT '{}',
+  details JSON NOT NULL DEFAULT '{}',
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -103,7 +103,7 @@ CREATE TABLE IF NOT EXISTS resort_entries (
   terrain_mix VARCHAR(80) NOT NULL,
   snow_bias VARCHAR(80) NOT NULL,
   summary TEXT NOT NULL,
-  metadata JSON NOT NULL DEFAULT '{}',
+  details JSON NOT NULL DEFAULT '{}',
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );

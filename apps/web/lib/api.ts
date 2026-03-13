@@ -1,4 +1,4 @@
-import { dashboardSnapshot, sampleArtifacts } from "./mock-data";
+import { dashboardSnapshot, sampleApprovals, sampleArtifacts, sampleTrips } from "./mock-data";
 import type { ArtifactRecord, DashboardSnapshot, PlannerRequestPayload } from "./types";
 
 const browserApiBase = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000";
@@ -66,3 +66,32 @@ export async function fetchArtifacts(runId: string): Promise<ArtifactRecord[]> {
   }
 }
 
+export async function fetchTrips() {
+  try {
+    const response = await fetch(`${resolveBaseUrl()}/trips`, {
+      cache: "no-store",
+      credentials: "include"
+    });
+    if (!response.ok) {
+      return sampleTrips;
+    }
+    return response.json();
+  } catch {
+    return sampleTrips;
+  }
+}
+
+export async function fetchApprovals() {
+  try {
+    const response = await fetch(`${resolveBaseUrl()}/approvals`, {
+      cache: "no-store",
+      credentials: "include"
+    });
+    if (!response.ok) {
+      return sampleApprovals;
+    }
+    return response.json();
+  } catch {
+    return sampleApprovals;
+  }
+}

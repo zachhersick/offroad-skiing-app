@@ -137,7 +137,7 @@ class GearItem(TimestampMixin, Base):
     category: Mapped[GearCategory] = mapped_column(Enum(GearCategory))
     name: Mapped[str] = mapped_column(String(120))
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)
-    metadata: Mapped[dict] = mapped_column(JSON, default=dict)
+    details: Mapped[dict] = mapped_column(JSON, default=dict)
 
 
 class Trip(TimestampMixin, Base):
@@ -174,7 +174,7 @@ class TrailEntry(TimestampMixin, Base):
     drive_time_hours: Mapped[int] = mapped_column(Integer)
     summary: Mapped[str] = mapped_column(Text)
     risks: Mapped[list[str]] = mapped_column(JSON, default=list)
-    metadata: Mapped[dict] = mapped_column(JSON, default=dict)
+    details: Mapped[dict] = mapped_column(JSON, default=dict)
 
 
 class ResortEntry(TimestampMixin, Base):
@@ -186,7 +186,7 @@ class ResortEntry(TimestampMixin, Base):
     terrain_mix: Mapped[str] = mapped_column(String(80))
     snow_bias: Mapped[str] = mapped_column(String(80))
     summary: Mapped[str] = mapped_column(Text)
-    metadata: Mapped[dict] = mapped_column(JSON, default=dict)
+    details: Mapped[dict] = mapped_column(JSON, default=dict)
 
 
 class Condition(TimestampMixin, Base):

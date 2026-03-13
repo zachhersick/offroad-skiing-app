@@ -40,7 +40,14 @@ async def submit_run(payload: PlannerRequest, user: User = Depends(get_current_u
 async def list_runs(user: User = Depends(get_current_user), db: AsyncSession = Depends(get_db)) -> list[dict]:
     runs = (await db.execute(select(AgentRun).where(AgentRun.user_id == user.id).order_by(AgentRun.created_at.desc()))).scalars().all()
     return [
-        {"id": run.id, "trip_id": run.trip_id, "title": run.title, "status": run.status.value, "mode": run.mode.value}
+        {
+            "id": run.id,
+            "trip_id": run.trip_id,
+            "title": run.title,
+            "status": run.status.value,
+            "mode": run.mode.value,
+            "createdAt": run.created_at.isoformat(),
+        }
         for run in runs
     ]
 
@@ -76,7 +83,10 @@ async def approve_run(run_id: str, payload: ApprovalDecision, user: User = Depen
     run = await db.get(AgentRun, run_id)
     if run is None or run.user_id != user.id:
         raise HTTPException(status_code=404, detail="Run not found")
-    run = await record_approval_decision(db, run_id, payload.approved)
+    try:
+        run = await record_approval_decision(db, run_id, payload.approved)
+    except ValueError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
     if payload.approved:
         redis = Redis.from_url(get_settings().redis_url)
         await enqueue_run(redis, run.id)

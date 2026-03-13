@@ -94,3 +94,32 @@ export const sampleArtifacts: ArtifactRecord[] = [
   }
 ];
 
+export const sampleTrips = [
+  {
+    id: "trip_1",
+    title: "Half-day desert trail",
+    mode: "offroad",
+    region: "San Diego",
+    objective: "Conservative scenic route for a mostly stock midsize truck.",
+    status: "planned"
+  },
+  {
+    id: "trip_2",
+    title: "Mammoth storm day",
+    mode: "ski",
+    region: "Eastern Sierra",
+    objective: "Pick the right ski and pack for cold storm laps.",
+    status: "planned"
+  }
+] as const;
+
+export const sampleApprovals = [
+  {
+    id: "approval_1",
+    run_id: "run_seed",
+    title: "Half-day desert trail",
+    action: "refresh_live_conditions",
+    reason: "External HTTP requests require human approval.",
+    status: "pending"
+  }
+];
