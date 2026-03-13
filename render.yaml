@@ -60,11 +60,11 @@ services:
       - key: NEXT_PUBLIC_API_BASE_URL
         value: /api
 
-  - type: pserv
-    name: terrainpilot-db
-    plan: free
-    postgresMajorVersion: "16"
-
   - type: keyvalue
     name: terrainpilot-redis
     plan: free
+
+databases:
+  - name: terrainpilot-db
+    plan: free
+    postgresMajorVersion: "16"
