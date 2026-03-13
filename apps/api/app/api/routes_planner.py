@@ -14,6 +14,7 @@ from app.schemas.planner import PlannerRequest, PlannerRunResponse
 from app.services.planner import (
     create_trip_and_run,
     enqueue_run,
+    process_run,
     record_approval_decision,
     serialize_run_artifacts,
     serialize_run_logs,
@@ -29,10 +30,14 @@ class ApprovalDecision(BaseModel):
 
 @router.post("/runs", response_model=PlannerRunResponse)
 async def submit_run(payload: PlannerRequest, user: User = Depends(get_current_user), db: AsyncSession = Depends(get_db)) -> PlannerRunResponse:
+    settings = get_settings()
     run = await create_trip_and_run(db, user.id, payload)
-    redis = Redis.from_url(get_settings().redis_url)
-    await enqueue_run(redis, run.id)
-    await redis.aclose()
+    if settings.run_inline_agent_jobs:
+        run = await process_run(db, run.id)
+    else:
+        redis = Redis.from_url(settings.redis_url)
+        await enqueue_run(redis, run.id)
+        await redis.aclose()
     return PlannerRunResponse(id=run.id, trip_id=run.trip_id, status=run.status.value, title=run.title)
 
 
@@ -88,7 +93,11 @@ async def approve_run(run_id: str, payload: ApprovalDecision, user: User = Depen
     except ValueError as exc:
         raise HTTPException(status_code=409, detail=str(exc)) from exc
     if payload.approved:
-        redis = Redis.from_url(get_settings().redis_url)
-        await enqueue_run(redis, run.id)
-        await redis.aclose()
+        settings = get_settings()
+        if settings.run_inline_agent_jobs:
+            run = await process_run(db, run.id)
+        else:
+            redis = Redis.from_url(settings.redis_url)
+            await enqueue_run(redis, run.id)
+            await redis.aclose()
     return {"id": run.id, "status": run.status.value}

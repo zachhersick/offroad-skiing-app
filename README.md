@@ -2,6 +2,8 @@
 
 TerrainPilot is a workspace-first trip planning and recommendation app for off-road and ski enthusiasts. The MVP is off-road-first, but the schema, runtime, and UI support both modes from the start.
 
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/zachhersick/offroad-skiing-app)
+
 ## Stack
 - Next.js + TypeScript + Tailwind
 - FastAPI + SQLAlchemy + Pydantic
@@ -51,6 +53,7 @@ The API stores users, profiles, vehicles, ski quivers, gear items, trips, routes
 
 ## Deployment
 See [`docs/production.md`](/Users/zachhersick/Desktop/DevPersonal/offroad-skiing-app/docs/production.md) for Vercel and Railway setup.
+For a fully free hosted baseline, use [`render.yaml`](/Users/zachhersick/Desktop/DevPersonal/offroad-skiing-app/render.yaml) on Render. That path runs jobs inline in the API service so a separate paid worker is not required.
 
 ## Safety
 - No repo code triggers paid API calls by default.

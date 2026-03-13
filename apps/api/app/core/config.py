@@ -20,6 +20,7 @@ class Settings(BaseSettings):
     enable_live_http: bool = Field(default=False, alias="ENABLE_LIVE_HTTP")
     approved_http_hosts: str = Field(default="api.open-meteo.com", alias="APPROVED_HTTP_HOSTS")
     cors_origins: str = Field(default="http://localhost:3000", alias="CORS_ORIGINS")
+    run_inline_agent_jobs: bool = Field(default=False, alias="RUN_INLINE_AGENT_JOBS")
 
     @property
     def approved_http_hosts_list(self) -> list[str]:
@@ -33,4 +34,3 @@ class Settings(BaseSettings):
 @lru_cache
 def get_settings() -> Settings:
     return Settings()
-

@@ -2,10 +2,8 @@
 
 import { useState, useTransition } from "react";
 
-const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000";
-
 async function postAuth(path: "signup" | "signin", body: Record<string, unknown>) {
-  const response = await fetch(`${apiBase}/auth/${path}`, {
+  const response = await fetch(`/api/auth/${path}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
@@ -109,4 +107,3 @@ export function AuthForm() {
     </section>
   );
 }
-

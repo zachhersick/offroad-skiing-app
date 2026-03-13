@@ -1,3 +1,4 @@
+import type { Route } from "next";
 import Link from "next/link";
 
 const navItems = [
@@ -10,7 +11,7 @@ const navItems = [
   { href: "/recommendations", label: "Recommendations" },
   { href: "/approvals", label: "Approvals" },
   { href: "/auth", label: "Auth" }
-];
+] as const satisfies ReadonlyArray<{ href: Route; label: string }>;
 
 export function TopNav() {
   return (
@@ -30,4 +31,3 @@ export function TopNav() {
     </header>
   );
 }
-
